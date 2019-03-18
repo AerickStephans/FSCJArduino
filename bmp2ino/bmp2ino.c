@@ -94,8 +94,9 @@ int main(int argc, char* argv[])
 
 	// Prepare some information for the pixels
 	imageSize = divideRoundUp(iHeader.biHeight * iHeader.biWidth, 8);
-	scanLineWidth = ((iHeader.biWidth / 8) / 4 + 1) * 4;
-	padding = scanLineWidth - divideRoundUp(iHeader.biWidth, 8);
+	//scanLineWidth = ((iHeader.biWidth / 8) / 4 + 1) * 4;
+	scanLineWidth = ((iHeader.biWidth + 3) / 8);
+	padding = scanLineWidth % 4;
 
 
 
@@ -132,7 +133,7 @@ int main(int argc, char* argv[])
 	{
 			
 		// Disregard null padding
-		if ( !((i + padding) % scanLineWidth ))
+		if ( (padding > 0) && !((i + padding) % scanLineWidth ))
 			i += padding - 1;
 
 		else
