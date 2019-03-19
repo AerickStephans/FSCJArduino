@@ -25,26 +25,46 @@ float cube3d[8][3] = {
 };
 unsigned char cube2d[8][2];
 
-
-void setup() {
-  TV.begin(NTSC,160,144);
+void main_loop() {
+  TV.clear_screen();
   TV.select_font(font6x8);
   intro();
-  TV.println("I am the TVout\nlibrary running on a freeduino\n");
-  TV.delay(2500);
-  TV.println("I generate a PAL\nor NTSC composite  video using\ninterrupts\n");
-  TV.delay(2500);
-  TV.println("My schematic:");
-  TV.delay(1500);
-  TV.bitmap(0,0,schematic);
+  TV.println("This is a modified version");
+  TV.delay(1000);
+  TV.println("of the DemoNTSC demo code");
+  TV.delay(1000);
+  TV.println("included in David Mellis'");
+  TV.delay(1000);
+  TV.println("TVoutlibrary running on an");
+  TV.delay(1000);
+  TV.println("Arduino Mega 2560 micro-.");
+  TV.delay(1000);
+  TV.println("controller. For more about");
+  TV.delay(1000);
+  TV.println("this library, please visit");
+  TV.delay(1000);
+  TV.println("https://playground.arduino.cc/Main/TVout\n");
+  TV.delay(3000);
+  TV.clear_screen();
+  TV.println("I generate NTSC signals,");
+  TV.delay(1000);
+  TV.println("such as the yellow cables");
+  TV.delay(1000);
+  TV.println("for TVs used in the USA,");
+  TV.delay(1000);
+  TV.println("by using interrupts.\n");
+  TV.delay(1000);
+  TV.println("My schematic is:");
+  TV.delay(1000);
+  TV.bitmap(0,56,schematic);
   TV.delay(10000);
   TV.clear_screen();
-  TV.println("Lets see what\nwhat I can do");
+  TV.println("Lets see what I can do!\n");
   TV.delay(2000);
   
   //fonts
-  TV.clear_screen();
-  TV.println(0,0,"Multiple fonts:");
+  //TV.clear_screen();
+  TV.println("Multiple fonts:");
   TV.select_font(font4x6);
   TV.println("4x6 font FONT");
   TV.select_font(font6x8);
@@ -54,8 +74,8 @@ void setup() {
   TV.select_font(font6x8);
   TV.delay(2000);
   
-  TV.clear_screen();
-  TV.print(9,44,"Draw Basic Shapes");
+  //TV.clear_screen();
+  TV.print("Draw Basic Shapes");
   TV.delay(2000);
   
   //circles
@@ -67,15 +87,15 @@ void setup() {
   
   //rectangles and lines
   TV.clear_screen();
-  TV.draw_rect(20,20,80,56,WHITE);
+  TV.draw_rect(20,20,120,104,WHITE);
   TV.delay(500);
-  TV.draw_rect(10,10,100,76,WHITE,INVERT);
+  TV.draw_rect(10,10,140,124,WHITE,INVERT);
   TV.delay(500);
-  TV.draw_line(60,20,60,76,INVERT);
-  TV.draw_line(20,48,100,48,INVERT);
+  TV.draw_line(80,10,80,134,INVERT);
+  TV.draw_line(10,72,150,72,INVERT);
   TV.delay(500);
-  TV.draw_line(10,10,110,86,INVERT);
-  TV.draw_line(10,86,110,10,INVERT);
+  TV.draw_line(10,10,150,134,INVERT);
+  TV.draw_line(10,134,150,10,INVERT);
   TV.delay(2000);
   
   //random cube forever.
@@ -83,11 +103,12 @@ void setup() {
   TV.print(16,40,"Random Cube");
   TV.print(28,48,"Rotation");
   TV.delay(2000);
+  TV.clear_screen();
   
   randomSeed(analogRead(0));
 }
 
-void loop() {
+void cube_loop() {
   int rsteps = random(10,60);
   switch(random(6)) {
     case 0:
@@ -129,6 +150,25 @@ void loop() {
   }
 }
 
+void setup() {
+  TV.begin(NTSC,160,144);
+}
+
+void loop() {
+  char numbers[4] = { 0, 0, 0, 0 };
+  main_loop();
+  for(int i = 0; i < 300; i++)
+  {
+    numbers[0] = (i / 100) + '0';
+    numbers[1] = ((i / 10) % 10) + '0';
+    numbers[1] = (i % 10) + '0';
+
+    cube_loop();
+
+    TV.println(0, 0, numbers);
+  }
+}
+
 void intro() {
 unsigned char w,l,wb;
   int index;
@@ -153,13 +193,14 @@ unsigned char w,l,wb;
 }
 
 void printcube() {
+  TV.delay_frame(1);
+  clear_cube();
   //calculate 2d points
   for(byte i = 0; i < 8; i++) {
     cube2d[i][0] = (unsigned char)((cube3d[i][0] * view_plane / cube3d[i][2]) + (TV.hres()/2));
     cube2d[i][1] = (unsigned char)((cube3d[i][1] * view_plane / cube3d[i][2]) + (TV.vres()/2));
   }
-  TV.delay_frame(1);
-  TV.clear_screen();
+  //TV.clear_screen();
   draw_cube();
 }
 
@@ -215,4 +256,19 @@ void draw_cube() {
   TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[6][0],cube2d[6][1],WHITE);
   TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[3][0],cube2d[3][1],WHITE);
   TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[5][0],cube2d[5][1],WHITE);
+}
+
+void clear_cube() {
+  TV.draw_line(cube2d[0][0],cube2d[0][1],cube2d[1][0],cube2d[1][1],BLACK);
+  TV.draw_line(cube2d[0][0],cube2d[0][1],cube2d[2][0],cube2d[2][1],BLACK);
+  TV.draw_line(cube2d[0][0],cube2d[0][1],cube2d[4][0],cube2d[4][1],BLACK);
+  TV.draw_line(cube2d[1][0],cube2d[1][1],cube2d[5][0],cube2d[5][1],BLACK);
+  TV.draw_line(cube2d[1][0],cube2d[1][1],cube2d[3][0],cube2d[3][1],BLACK);
+  TV.draw_line(cube2d[2][0],cube2d[2][1],cube2d[6][0],cube2d[6][1],BLACK);
+  TV.draw_line(cube2d[2][0],cube2d[2][1],cube2d[3][0],cube2d[3][1],BLACK);
+  TV.draw_line(cube2d[4][0],cube2d[4][1],cube2d[6][0],cube2d[6][1],BLACK);
+  TV.draw_line(cube2d[4][0],cube2d[4][1],cube2d[5][0],cube2d[5][1],BLACK);
+  TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[6][0],cube2d[6][1],BLACK);
+  TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[3][0],cube2d[3][1],BLACK);
+  TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[5][0],cube2d[5][1],BLACK);
 }
