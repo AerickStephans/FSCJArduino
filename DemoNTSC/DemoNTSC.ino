@@ -1,7 +1,6 @@
 #include <TVout.h>
 #include <fontALL.h>
 #include "schematic.h"
-#include "TVOlogo.h"
 #include "logo.h"
 
 TVout TV;
@@ -9,7 +8,7 @@ TVout TV;
 int zOff = 150;
 int xOff = 0;
 int yOff = 0;
-int cSize = 50;
+int cSize = 64;
 int view_plane = 64;
 float angle = PI/60;
 
@@ -25,6 +24,7 @@ float cube3d[8][3] = {
 };
 unsigned char cube2d[8][2];
 
+
 void main_loop() {
   TV.clear_screen();
   TV.select_font(font6x8);
@@ -35,28 +35,32 @@ void main_loop() {
   TV.delay(1000);
   TV.println("included in David Mellis'");
   TV.delay(1000);
-  TV.println("TVoutlibrary running on an");
+  TV.println("TVout library running on");
   TV.delay(1000);
-  TV.println("Arduino Mega 2560 micro-.");
+  TV.println("an Arduino Mega 2560 micro");
   TV.delay(1000);
   TV.println("controller. For more about");
   TV.delay(1000);
-  TV.println("this library, please visit");
+  TV.println("this library, please visit\n");
   TV.delay(1000);
   TV.println("https://playground.arduino.cc/Main/TVout\n");
   TV.delay(3000);
   TV.clear_screen();
-  TV.println("I generate NTSC signals,");
+  TV.println("I generate NTSC signals");
   TV.delay(1000);
-  TV.println("such as the yellow cables");
+  TV.println("usable with the yellow");
   TV.delay(1000);
-  TV.println("for TVs used in the USA,");
+  TV.println("RCA cables for TVs used");
   TV.delay(1000);
-  TV.println("by using interrupts.\n");
+  TV.println("in North America. I can");
+  TV.delay(1000);
+  TV.println("generate a PAL signal");
+  TV.delay(1000);
+  TV.println("for TVs in Europe also!");
   TV.delay(1000);
   TV.println("My schematic is:");
   TV.delay(1000);
-  TV.bitmap(0,56,schematic);
+  TV.bitmap(0,64,schematic);
   TV.delay(10000);
   TV.clear_screen();
   TV.println("Lets see what I can do!\n");
@@ -75,7 +79,7 @@ void main_loop() {
   TV.delay(2000);
   
   //TV.clear_screen();
-  TV.print("Draw Basic Shapes");
+  TV.print("\nDraw Basic Shapes");
   TV.delay(2000);
   
   //circles
@@ -155,18 +159,9 @@ void setup() {
 }
 
 void loop() {
-  char numbers[4] = { 0, 0, 0, 0 };
   main_loop();
-  for(int i = 0; i < 300; i++)
-  {
-    numbers[0] = (i / 100) + '0';
-    numbers[1] = ((i / 10) % 10) + '0';
-    numbers[1] = (i % 10) + '0';
-
+  for(int i = 0; i < 64; i++)
     cube_loop();
-
-    TV.println(0, 0, numbers);
-  }
 }
 
 void intro() {
@@ -193,14 +188,13 @@ unsigned char w,l,wb;
 }
 
 void printcube() {
-  TV.delay_frame(1);
-  clear_cube();
   //calculate 2d points
   for(byte i = 0; i < 8; i++) {
     cube2d[i][0] = (unsigned char)((cube3d[i][0] * view_plane / cube3d[i][2]) + (TV.hres()/2));
     cube2d[i][1] = (unsigned char)((cube3d[i][1] * view_plane / cube3d[i][2]) + (TV.vres()/2));
   }
-  //TV.clear_screen();
+  draw_cube();
+  TV.delay_frame(1);
   draw_cube();
 }
 
@@ -244,31 +238,16 @@ void xrotate(float q) {
 }
 
 void draw_cube() {
-  TV.draw_line(cube2d[0][0],cube2d[0][1],cube2d[1][0],cube2d[1][1],WHITE);
-  TV.draw_line(cube2d[0][0],cube2d[0][1],cube2d[2][0],cube2d[2][1],WHITE);
-  TV.draw_line(cube2d[0][0],cube2d[0][1],cube2d[4][0],cube2d[4][1],WHITE);
-  TV.draw_line(cube2d[1][0],cube2d[1][1],cube2d[5][0],cube2d[5][1],WHITE);
-  TV.draw_line(cube2d[1][0],cube2d[1][1],cube2d[3][0],cube2d[3][1],WHITE);
-  TV.draw_line(cube2d[2][0],cube2d[2][1],cube2d[6][0],cube2d[6][1],WHITE);
-  TV.draw_line(cube2d[2][0],cube2d[2][1],cube2d[3][0],cube2d[3][1],WHITE);
-  TV.draw_line(cube2d[4][0],cube2d[4][1],cube2d[6][0],cube2d[6][1],WHITE);
-  TV.draw_line(cube2d[4][0],cube2d[4][1],cube2d[5][0],cube2d[5][1],WHITE);
-  TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[6][0],cube2d[6][1],WHITE);
-  TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[3][0],cube2d[3][1],WHITE);
-  TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[5][0],cube2d[5][1],WHITE);
-}
-
-void clear_cube() {
-  TV.draw_line(cube2d[0][0],cube2d[0][1],cube2d[1][0],cube2d[1][1],BLACK);
-  TV.draw_line(cube2d[0][0],cube2d[0][1],cube2d[2][0],cube2d[2][1],BLACK);
-  TV.draw_line(cube2d[0][0],cube2d[0][1],cube2d[4][0],cube2d[4][1],BLACK);
-  TV.draw_line(cube2d[1][0],cube2d[1][1],cube2d[5][0],cube2d[5][1],BLACK);
-  TV.draw_line(cube2d[1][0],cube2d[1][1],cube2d[3][0],cube2d[3][1],BLACK);
-  TV.draw_line(cube2d[2][0],cube2d[2][1],cube2d[6][0],cube2d[6][1],BLACK);
-  TV.draw_line(cube2d[2][0],cube2d[2][1],cube2d[3][0],cube2d[3][1],BLACK);
-  TV.draw_line(cube2d[4][0],cube2d[4][1],cube2d[6][0],cube2d[6][1],BLACK);
-  TV.draw_line(cube2d[4][0],cube2d[4][1],cube2d[5][0],cube2d[5][1],BLACK);
-  TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[6][0],cube2d[6][1],BLACK);
-  TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[3][0],cube2d[3][1],BLACK);
-  TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[5][0],cube2d[5][1],BLACK);
+  TV.draw_line(cube2d[0][0],cube2d[0][1],cube2d[1][0],cube2d[1][1],INVERT);
+  TV.draw_line(cube2d[0][0],cube2d[0][1],cube2d[2][0],cube2d[2][1],INVERT);
+  TV.draw_line(cube2d[0][0],cube2d[0][1],cube2d[4][0],cube2d[4][1],INVERT);
+  TV.draw_line(cube2d[1][0],cube2d[1][1],cube2d[5][0],cube2d[5][1],INVERT);
+  TV.draw_line(cube2d[1][0],cube2d[1][1],cube2d[3][0],cube2d[3][1],INVERT);
+  TV.draw_line(cube2d[2][0],cube2d[2][1],cube2d[6][0],cube2d[6][1],INVERT);
+  TV.draw_line(cube2d[2][0],cube2d[2][1],cube2d[3][0],cube2d[3][1],INVERT);
+  TV.draw_line(cube2d[4][0],cube2d[4][1],cube2d[6][0],cube2d[6][1],INVERT);
+  TV.draw_line(cube2d[4][0],cube2d[4][1],cube2d[5][0],cube2d[5][1],INVERT);
+  TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[6][0],cube2d[6][1],INVERT);
+  TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[3][0],cube2d[3][1],INVERT);
+  TV.draw_line(cube2d[7][0],cube2d[7][1],cube2d[5][0],cube2d[5][1],INVERT);
 }

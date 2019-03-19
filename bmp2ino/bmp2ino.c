@@ -128,7 +128,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Print the data as a C array
-	printf("char image[] = { %d, %d,\n", iHeader.biWidth, iHeader.biHeight);
+	printf("PROGMEM const unsigned char image[] = { %d, %d,\n", iHeader.biWidth, iHeader.biHeight);
 	for (i = 0, j = 0; i < pixelsSize; i++)
 	{
 			
