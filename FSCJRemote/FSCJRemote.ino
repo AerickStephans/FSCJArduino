@@ -6,12 +6,12 @@ int LED_select2 = 4;
 int LED_select3 = 5;
 int LED_select4 = 6;
 
-#define LED_SELNONE 0
-#define LED_SEL1    1
-#define LED_SEL2    2
-#define LED_SEL3    4
-#define LED_SEL4    8
-#define LED_SELALL 15
+#define LED_SELNONE 0x0
+#define LED_SEL1    0x1
+#define LED_SEL2    0x2
+#define LED_SEL3    0x4
+#define LED_SEL4    0x8
+#define LED_SELALL  0xF
 
 // Pins for the LED segments
 int LED_segA = 7;
@@ -129,9 +129,13 @@ void loop() {
   Serial.print(y/4, HEX);
   Serial.print(")\n");
   
-  // Output the current joystick position on the LED. Calling the function twice
-  // allows for a total of 40 milliseconds of delay (20 per call) without causing
-  // the digits to flash on the LED.
+  // Output the current joystick position on the LED. Calling the function thrice
+  // allows for a total of 60 milliseconds of delay (20 per call) without causing
+  // the digits to flash on the LED; this results in slightly sluggish response.
+  // Using only two gives a much smoother response, in exchange for noticable
+  // scintillation of the digits. Only one function call results in very obvious
+  // flashing, so it's best to call it more than once.
+  LED_WriteShort(joy_pos);
   LED_WriteShort(joy_pos);
   LED_WriteShort(joy_pos);
 }
