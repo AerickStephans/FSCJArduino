@@ -1,11 +1,12 @@
 #include "chardata.h"
 
 // Pins for the LED digits
-int LED_select1 = 2;
-int LED_select2 = 4;
-int LED_select3 = 5;
-int LED_select4 = 6;
+int LED_select1 = 2;  // pin 12 on the LED (upper left corner)
+int LED_select2 = 4;  // pin  9 on the LED
+int LED_select3 = 5;  // pin  8 on the LED
+int LED_select4 = 6;  // pin  6 on the LED (lower right corner)
 
+// Constants for easy access to the various digits
 #define LED_SELNONE 0x0
 #define LED_SEL1    0x1
 #define LED_SEL2    0x2
@@ -14,13 +15,13 @@ int LED_select4 = 6;
 #define LED_SELALL  0xF
 
 // Pins for the LED segments
-int LED_segA = 7;
-int LED_segB = 8;
-int LED_segC = 9;
-int LED_segD = 10;
-int LED_segE = 11;
-int LED_segF = 12;
-int LED_segG = 13;
+int LED_segA = 7;     // pin 11 on the LED
+int LED_segB = 8;     // pin  7 on the LED (upper right corner)
+int LED_segC = 9;     // pin  4 on the LED
+int LED_segD = 10;    // pin  2 on the LED
+int LED_segE = 11;    // pin  1 on the LED (lower left corner)
+int LED_segF = 12;    // pin 10 on the LED
+int LED_segG = 13;    // pin  5 on the LED
 
 // Pins for the joystick inputs
 int JOY_pinX = A1;
@@ -55,19 +56,19 @@ void LED_WriteShort(unsigned short number)
   LED_SelectDigit(LED_SELNONE);
   LED_WriteChar((number & 0xF000) >> 12);
   LED_SelectDigit(LED_SEL1);
-  delay(2);   // short delay to ensure the LED receives the signal
+  delay(5);   // short delay to ensure the LED receives the signal
   LED_SelectDigit(LED_SELNONE);
   LED_WriteChar((number & 0x0F00) >> 8);
   LED_SelectDigit(LED_SEL2);
-  delay(2);
+  delay(5);
   LED_SelectDigit(LED_SELNONE);
   LED_WriteChar((number & 0x00F0) >> 4);
   LED_SelectDigit(LED_SEL3);
-  delay(2);
+  delay(5);
   LED_SelectDigit(LED_SELNONE);
   LED_WriteChar(number & 0x000F);
   LED_SelectDigit(LED_SEL4);
-  delay(14);  // last LED is dimmer, so keep it displayed longer
+  delay(5);  // last LED is dimmer, so keep it displayed longer
 }
 
 // This holds the current joystick position where X is the lower
